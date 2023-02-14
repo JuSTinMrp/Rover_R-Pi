@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Raspberry Pi Security Camera</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>RPi-Roving Camera</h1>
+
+    <h2>Movement Controls</h2>
+    <button onclick="move_motor('forward')">Forward</button>
+    <button onclick="move_motor('backward')">Backward</button>
+    <button onclick="move_motor('left')">Left</button>
+    <button onclick="move_motor('right')">Right</button>
+    <button onclick="stopMotor()">Stop</button>
+
+    <h2>LED Light</h2>
+    <button onclick="toggleLED('on')">Turn On</button>
+    <button onclick="toggleLED('off')">Turn Off</button>
+
+    <h2>Photos and Videos</h2>
+    <button onclick="take_photo()">Take Photo</button>
+    <button onclick="recordVideo()">Record Video</button>
+
+    <h2>System Control</h2>
+    <button onclick="shutdown()">Shutdown</button>
+    <button onclick="reboot()">Reboot</button>
+
+    <script>
+      function move_motor(direction) {
+        $.get('/motor/' + direction);
+      }
+
+      function stopMotor() {
+        $.get('/motor/stop');
+      }
+
+      function toggleLED(state) {
+        $.get('/led/' + state);
+      }
+
+      function takePhoto() {
+        $.get('/photo');
+      }
+
+      function recordVideo() {
+        $.get('/video');
+      }
+
+      function shutdown() {
+        $.get('/shutdown');
+      }
+
+      function reboot() {
+        $.get('/reboot');
+      }
+    </script>
+  </body>
+</html>

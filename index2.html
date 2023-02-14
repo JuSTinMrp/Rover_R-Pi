@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Raspberry Pi Security Camera</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Raspberry Pi Security Camera</h1>
+
+    <div class="camera-controls">
+      <h2>Roving Camera</h2>
+      <div class="joystick">
+        <div class="joystick-button joystick-up" onclick="moveMotor('forward')"></div>
+        <div class="joystick-button joystick-left" onclick="moveMotor('left')"></div>
+        <div class="joystick-button joystick-right" onclick="moveMotor('right')"></div>
+        <div class="joystick-button joystick-down" onclick="moveMotor('backward')"></div>
+      </div>
+      <button class="stop-button" onclick="stopMotor()">Stop</button>
+    </div>
+
+    <div class="led-controls">
+      <h2>LED Light</h2>
+      <button onclick="toggleLED('on')">Turn On</button>
+      <button onclick="toggleLED('off')">Turn Off</button>
+    </div>
+
+    <div class="media-controls">
+      <h2>Photos and Videos</h2>
+      <button onclick="takePhoto()">Take Photo</button>
+      <button onclick="recordVideo()">Record Video</button>
+    </div>
+
+    <div class="system-controls">
+      <h2>System Control</h2>
+      <button onclick="shutdown()">Shutdown</button>
+      <button onclick="reboot()">Reboot</button>
+    </div>
+
+    <script>
+      function moveMotor(direction) {
+        $.get('/motor/' + direction);
+      }
+
+      function stopMotor() {
+        $.get('/motor/stop');
+      }
+
+      function toggleLED(state) {
+        $.get('/led/' + state);
+      }
+
+      function takePhoto() {
+        $.get('/photo');
+      }
+
+      function recordVideo() {
+        $.get('/video');
+      }
+
+      function shutdown() {
+        $.get('/shutdown');
+      }
+
+      function reboot() {
+        $.get('/reboot');
+      }
+    </script>
+  </body>
+</html>

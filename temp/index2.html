@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Raspberry Pi Security Camera</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>Raspberry Pi Security Camera</h1>
+
+    <div class="camera-controls">
+      <h2>Roving Camera</h2>
+      <div class="virtual-joystick">
+        <div class="virtual-joystick-handle" id="virtual-joystick-handle" onmousedown="startJoystick(event)" onmouseup="stopJoystick(event)"></div>
+      </div>
+      <button class="stop-button" onclick="stopMotor()">Stop</button>
+    </div>
+
+    <div class="led-controls">
+      <h2>LED Light</h2>
+      <button onclick="toggleLED('on')">Turn On</button>
+      <button onclick="toggleLED('off')">Turn Off</button>
+    </div>
+
+    <div class="media-controls">
+      <h2>Photos and Videos</h2>
+      <button onclick="takePhoto()">Take Photo</button>
+      <button onclick="recordVideo()">Record Video</button>
+    </div>
+
+    <div class="system-controls">
+      <h2>System Control</h2>
+      <button onclick="shutdown()">Shutdown</button>
+      <button onclick="reboot()">Reboot</button>
+    </div>
+
+    <script>
+      var joystickHandle = document.getElementById("virtual-joystick-handle");
+      var joystickActive = false;
+
+      function startJoystick(e) {
+        joystickActive = true;
+        e.preventDefault();
+      }
+
+      function stopJoystick(e) {
+        joystickActive = false;
+        joystickHandle.style.left = "50%";
+        joystickHandle.style.top = "50%";
+        $.get('/motor/stop');
+        e.preventDefault();
+      }
+
+      function moveJoystick(e) {
+        if (joystickActive) {
+          var parent = document.getElementsByClassName("virtual-joystick")[0];
+          var parentWidth = parent.offsetWidth;
+          var parentHeight = parent.offsetHeight;
+          var joystickWidth = joystickHandle.offsetWidth;
+          var joystickHeight = joystickHandle.offsetHeight;
+          var positionX = e.clientX - parent.offsetLeft;
+          var positionY = e.clientY - parent.offsetTop;
+
+          var x = ((positionX - (joystickWidth / 2)) / (parentWidth - joystickWidth)) * 2;
+          var y = ((positionY - (joystickHeight / 2)) / (parentHeight - joystickHeight)) * 2;
+
+          x = Math.min(1, Math.max(-1, x));
+          y = Math.min(1, Math.max(-1, y));
+
+          joystickHandle.style.left = (50 + (x * 50)) + "%";
+          joystickHandle.style.top = (50 + (y * -50)) + "%";
+
+          var xDirection = "stop";
+          var yDirection = "stop";
+
+          if (x > 0.2) {
+            xDirection = "right";
+          } else if (x < -0.2) {
+            xDirection = "left";
+          }
+
+          if (y > 0.2) {
+            yDirection = "backward";
+          } else if (y < -0.2) {
+            yDirection = "forward";
+          }
+
+          $.
